@@ -1,24 +1,43 @@
 <template>
-  <h1>v-model vs v-bind</h1>
-  <h2>message: {{ message }}</h2>
-  <div>
-    <p>v-model = v-bind + @input</p>
-    <input
-      type="text"
-      v-bind:value="message"
-      @input="message = $event.target.value"
-    />
-  </div>
-  <div>
-    <p>v-model</p>
-    <input type="text" v-model="message" />
-  </div>
+  <h1>{{ message }}</h1>
+  <button @click="sortUsersByAge">Sort users by age</button>
+  <button @click="hideInactiveUsers">Hide inactive users</button>
+  <button @click="showFirstTwoUsers">Show first two users</button>
+  <ul>
+    <li v-for="(user, index) in users" :key="user.id">
+      {{ index }} - {{ user.id }} - {{ user.name }} - {{ user.age }} -
+      {{ user.isActive }}
+    </li>
+  </ul>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 
-let message = ref('Hello!')
+let message = ref('Hello, Array Change Detection!')
+
+const users = ref([
+  { id: 1001, name: 'John Smith', age: 26, isActive: false },
+  { id: 1002, name: 'Tom Doe', age: 16, isActive: false },
+  { id: 1003, name: 'Frankin Wong', age: 18, isActive: true }
+])
+
+function sortUsersByAge() {
+  users.value.sort((a, b) => a.age - b.age)
+}
+
+function hideInactiveUsers() {
+  users.value = users.value.filter((user) => user.isActive)
+}
+
+function showFirstTwoUsers() {
+  users.value = users.value.slice(0, 2)
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+.inactive {
+  color: red;
+  text-decoration: line-through;
+}
+</style>
